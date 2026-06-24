@@ -59,6 +59,50 @@ Paste the same pooled connection string when prompted.
 
 ---
 
+## Step 2: Drizzle (database tables + API)
+
+Packages are installed. The `products` table is defined in `src/db/schema/product.ts`.
+
+### Create the table in Neon
+
+```txt
+npm run db:push
+```
+
+This syncs your schema to Neon (creates the `products` table).
+
+### Run the API locally
+
+```txt
+npm run dev
+```
+
+Then open:
+
+- `http://localhost:8787/` — API health text
+- `http://localhost:8787/products` — list products (empty array at first)
+
+### Add test products (optional)
+
+Use Drizzle Studio — a simple web UI for your database:
+
+```txt
+npm run db:studio
+```
+
+Add rows in the `products` table, then refresh `/products`.
+
+### Database scripts
+
+| Command | What it does |
+|---------|----------------|
+| `npm run db:push` | Push schema changes to Neon (quick, good for dev) |
+| `npm run db:generate` | Generate migration files |
+| `npm run db:migrate` | Apply migration files |
+| `npm run db:studio` | Open database UI in browser |
+
+---
+
 ## Wrangler types
 
 [For generating/synchronizing types based on your Worker configuration](https://developers.cloudflare.com/workers/wrangler/commands/#types):

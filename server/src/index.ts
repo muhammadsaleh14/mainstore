@@ -1,9 +1,16 @@
 import { Hono } from 'hono'
+import productsRoute from './routes/products'
 
-const app = new Hono()
+type Bindings = {
+  DATABASE_URL: string
+}
+
+const app = new Hono<{ Bindings: Bindings }>()
 
 app.get('/', (c) => {
-  return c.text('Hello Hono!')
+  return c.text('MainStore API')
 })
+
+app.route('/products', productsRoute)
 
 export default app
