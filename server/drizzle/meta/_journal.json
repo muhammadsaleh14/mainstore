@@ -15,6 +15,20 @@
       "when": 1782327290059,
       "tag": "0001_fresh_vance_astro",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1782332375496,
+      "tag": "0002_salty_may_parker",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1782332633924,
+      "tag": "0003_remove_compare_at_price_from_variants",
+      "breakpoints": true
     }
   ]
 }

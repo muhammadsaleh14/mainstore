@@ -1,0 +1,1 @@
+ALTER TABLE "product_variants" DROP COLUMN "compare_at_price";

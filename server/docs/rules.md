@@ -10,6 +10,18 @@ Each rule below should be within one line.
 - Utils live in `src/modules/<name>/<name>.util.ts` for pure helpers, transforms, and complex business logic.
 - Schemas live in `src/db/schema/`; repositories import table definitions from there.
 - One module per domain (e.g. `product`, `user`); add new features as new modules, not inside routes.
+- When generating a migration, always pass `--name` with a short descriptive slug (e.g. `add_product_variants`); never use auto-generated names.
+
+## Migrations
+
+Always name migrations when generating:
+
+```txt
+npm run db:generate -- --name add_product_variants
+npm run db:migrate
+```
+
+Use `snake_case` names that describe the change (e.g. `add_categories`, `add_product_images`).
 
 ## Request flow
 

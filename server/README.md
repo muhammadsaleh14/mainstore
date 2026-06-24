@@ -97,7 +97,7 @@ Add rows in the `products` table, then refresh `/products`.
 | Command | What it does |
 |---------|----------------|
 | `npm run db:push` | Push schema changes to Neon (quick, good for dev) |
-| `npm run db:generate` | Generate migration files |
+| `npm run db:generate -- --name <slug>` | Generate a named migration file |
 | `npm run db:migrate` | Apply migration files |
 | `npm run db:studio` | Open database UI in browser |
 
@@ -127,7 +127,7 @@ CLERK_PUBLISHABLE_KEY=pk_test_...
 ### C. Create the users table
 
 ```txt
-npm run db:generate
+npm run db:generate -- --name add_users
 npm run db:migrate
 ```
 
