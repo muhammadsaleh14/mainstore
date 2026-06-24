@@ -1,16 +1,29 @@
+import { clerkMiddleware } from '@hono/clerk-auth'
 import { Hono } from 'hono'
+import { cors } from 'hono/cors'
+import meRoute from './routes/me'
 import productsRoute from './routes/products'
-
-type Bindings = {
-  DATABASE_URL: string
-}
+import type { Bindings } from './types/env'
 
 const app = new Hono<{ Bindings: Bindings }>()
+
+app.use(
+  '*',
+  cors({
+    origin: (origin) => origin ?? '*',
+    allowHeaders: ['Content-Type', 'Authorization'],
+    allowMethods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    credentials: true,
+  }),
+)
+
+app.use('*', clerkMiddleware())
 
 app.get('/', (c) => {
   return c.text('MainStore API')
 })
 
 app.route('/products', productsRoute)
+app.route('/me', meRoute)
 
 export default app

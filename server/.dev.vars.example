@@ -1,7 +1,9 @@
-# Copy this file to .dev.vars and paste your Neon connection string.
+# Copy this file to .dev.vars and fill in your values.
 # .dev.vars is gitignored — never commit real secrets.
-#
-# Get the string from: https://console.neon.tech → your project → Connect
-# Enable "Connection pooling" (recommended for Cloudflare Workers).
 
+# Neon — https://console.neon.tech → project → Connect (enable Connection pooling)
 DATABASE_URL=postgresql://USER:PASSWORD@HOST/neondb?sslmode=require
+
+# Clerk — https://dashboard.clerk.com → your app → API Keys
+CLERK_SECRET_KEY=sk_test_...
+CLERK_PUBLISHABLE_KEY=pk_test_...

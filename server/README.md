@@ -103,6 +103,65 @@ Add rows in the `products` table, then refresh `/products`.
 
 ---
 
+## Step 3: Clerk authentication
+
+### A. Create a Clerk application
+
+1. Open [Clerk Dashboard](https://dashboard.clerk.com/sign-up) and sign up or log in.
+2. Click **Create application**.
+3. Name it `MainStore` and enable sign-in methods you want (Email, Google, etc.).
+4. Go to **Configure → API Keys**.
+5. Copy:
+   - **Publishable key** (`pk_test_...` or `pk_live_...`)
+   - **Secret key** (`sk_test_...` or `sk_live_...`)
+
+### B. Add keys to `.dev.vars`
+
+Add these lines to your `server/.dev.vars` file (keep your existing `DATABASE_URL`):
+
+```txt
+CLERK_SECRET_KEY=sk_test_...
+CLERK_PUBLISHABLE_KEY=pk_test_...
+```
+
+### C. Create the users table
+
+```txt
+npm run db:generate
+npm run db:migrate
+```
+
+### D. Test locally
+
+```txt
+npm run dev
+```
+
+| Route | Auth required? | Purpose |
+|-------|----------------|---------|
+| `GET /` | No | API health check |
+| `GET /products` | No | Public product list |
+| `GET /me` | Yes | Current user + sync to Neon |
+
+To call `/me`, send a Clerk session token in the `Authorization` header:
+
+```txt
+Authorization: Bearer <clerk_session_token>
+```
+
+You get this token from your frontend after a user signs in with Clerk. For quick testing, use Clerk's dashboard or a small test page later when Astro is set up.
+
+### E. Production secrets
+
+After deploy, set secrets on Cloudflare:
+
+```txt
+npx wrangler secret put CLERK_SECRET_KEY
+npx wrangler secret put CLERK_PUBLISHABLE_KEY
+```
+
+---
+
 ## Wrangler types
 
 [For generating/synchronizing types based on your Worker configuration](https://developers.cloudflare.com/workers/wrangler/commands/#types):
