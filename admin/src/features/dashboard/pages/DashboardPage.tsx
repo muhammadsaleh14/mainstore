@@ -10,7 +10,7 @@ export function DashboardPage() {
   const users = useUsers()
   const products = useProducts()
 
-  const activeProducts = products.data?.filter((product) => product.status === 'active').length ?? 0
+  const enabledProducts = products.data?.filter((product) => product.status === 'enabled').length ?? 0
 
   return (
     <>
@@ -42,8 +42,8 @@ export function DashboardPage() {
         <Col xs={24} sm={12} lg={8}>
           <Card>
             <Statistic
-              title="Active products"
-              value={activeProducts}
+              title="Enabled products"
+              value={enabledProducts}
               loading={products.isLoading}
               prefix={<ShoppingOutlined />}
             />

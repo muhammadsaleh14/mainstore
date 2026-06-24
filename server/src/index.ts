@@ -1,9 +1,10 @@
 import { clerkMiddleware } from '@hono/clerk-auth'
 import { Hono } from 'hono'
 import { cors } from 'hono/cors'
-import adminRoute from './routes/admin'
+import categoryRoutes from './routes/category/categories'
 import meRoute from './routes/me'
-import productsRoute from './routes/products'
+import productRoutes from './routes/product/products'
+import userRoutes from './routes/user/users'
 import type { Bindings } from './types/env'
 
 const app = new Hono<{ Bindings: Bindings }>()
@@ -24,8 +25,9 @@ app.get('/', (c) => {
   return c.text('MainStore API')
 })
 
-app.route('/products', productsRoute)
+app.route('/products', productRoutes)
+app.route('/categories', categoryRoutes)
+app.route('/users', userRoutes)
 app.route('/me', meRoute)
-app.route('/admin', adminRoute)
 
 export default app

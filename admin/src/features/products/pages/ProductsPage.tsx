@@ -1,14 +1,15 @@
-import { Alert, Card, Table, Tag } from 'antd'
+import { PlusOutlined } from '@ant-design/icons'
+import { Alert, Button, Card, Popconfirm, Space, Table, Tag } from 'antd'
 import type { ColumnsType } from 'antd/es/table'
 import dayjs from 'dayjs'
+import { useNavigate } from 'react-router-dom'
 import { PageHeader } from '@/components/PageHeader'
 import type { Product, ProductStatus, ProductVariant } from '@/types/api'
-import { useProducts } from '../hooks/useProducts'
+import { useArchiveProduct, useProducts } from '../hooks/useProducts'
 
 const STATUS_COLORS: Record<ProductStatus, string> = {
-  draft: 'default',
-  active: 'green',
-  archived: 'orange',
+  enabled: 'green',
+  disabled: 'default',
 }
 
 function formatPriceRange(variants: ProductVariant[]): string {
@@ -25,7 +26,9 @@ function totalStock(variants: ProductVariant[]): number {
 }
 
 export function ProductsPage() {
+  const navigate = useNavigate()
   const { data, isLoading, isError } = useProducts()
+  const archiveProduct = useArchiveProduct()
 
   const columns: ColumnsType<Product> = [
     { title: 'ID', dataIndex: 'id', width: 80 },
@@ -57,20 +60,55 @@ export function ProductsPage() {
     {
       title: 'Updated',
       dataIndex: 'updatedAt',
-      width: 160,
+      width: 150,
       render: (value: string) => dayjs(value).format('MMM D, YYYY'),
+    },
+    {
+      title: 'Actions',
+      key: 'actions',
+      width: 160,
+      render: (_, record) => (
+        <Space>
+          <Button size="small" onClick={() => navigate(`/products/${record.id}/edit`)}>
+            Edit
+          </Button>
+          <Popconfirm
+            title="Archive this product?"
+            okText="Archive"
+            disabled={record.status === 'disabled'}
+            onConfirm={() => archiveProduct.mutate(record.id)}
+          >
+            <Button
+              size="small"
+              danger
+              disabled={record.status === 'disabled'}
+              loading={archiveProduct.isPending && archiveProduct.variables === record.id}
+            >
+              Archive
+            </Button>
+          </Popconfirm>
+        </Space>
+      ),
     },
   ]
 
   return (
     <>
-      <PageHeader title="Products" subtitle="Catalog overview" />
+      <PageHeader
+        title="Products"
+        subtitle="Manage catalog"
+        extra={
+          <Button type="primary" icon={<PlusOutlined />} onClick={() => navigate('/products/new')}>
+            Add product
+          </Button>
+        }
+      />
       {isError ? (
         <Alert
           type="error"
           showIcon
           message="Could not load products"
-          description="Make sure the API is running at the configured URL."
+          description="Make sure the API is running and your account has the admin role."
         />
       ) : (
         <Card>
