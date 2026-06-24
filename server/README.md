@@ -1,3 +1,7 @@
+# MainStore API (Cloudflare Workers + Hono)
+
+## Quick start
+
 ```txt
 npm install
 npm run dev
@@ -7,7 +11,57 @@ npm run dev
 npm run deploy
 ```
 
-[For generating/synchronizing types based on your Worker configuration run](https://developers.cloudflare.com/workers/wrangler/commands/#types):
+## Step 1: Neon database setup
+
+### A. Create a Neon project (browser)
+
+1. Open [Neon Console](https://console.neon.tech/signup) and sign up or log in.
+2. Click **New Project**.
+3. Use these settings:
+   - **Name:** `mainstore` (or any name you like)
+   - **Postgres version:** latest (default)
+   - **Region:** pick one close to your users (e.g. US East if unsure)
+4. Click **Create Project**.
+
+You do **not** need to create tables yet — the default empty database is enough for now.
+
+### B. Copy the connection string
+
+1. On the project dashboard, click **Connect** (top right).
+2. Turn **Connection pooling** **ON** (important for Cloudflare Workers).
+3. Copy the full `postgresql://...` connection string.
+
+### C. Save it locally (development)
+
+1. Copy the example env file:
+
+   ```txt
+   copy .dev.vars.example .dev.vars
+   ```
+
+2. Open `.dev.vars` and replace the placeholder with your real connection string:
+
+   ```txt
+   DATABASE_URL=postgresql://...
+   ```
+
+   `.dev.vars` is gitignored — your secret stays on your machine.
+
+### D. Save it for production (when you deploy)
+
+After `npm run deploy`, set the secret on Cloudflare:
+
+```txt
+npx wrangler secret put DATABASE_URL
+```
+
+Paste the same pooled connection string when prompted.
+
+---
+
+## Wrangler types
+
+[For generating/synchronizing types based on your Worker configuration](https://developers.cloudflare.com/workers/wrangler/commands/#types):
 
 ```txt
 npm run cf-typegen

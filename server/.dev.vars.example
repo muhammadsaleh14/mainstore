@@ -1,0 +1,7 @@
+# Copy this file to .dev.vars and paste your Neon connection string.
+# .dev.vars is gitignored — never commit real secrets.
+#
+# Get the string from: https://console.neon.tech → your project → Connect
+# Enable "Connection pooling" (recommended for Cloudflare Workers).
+
+DATABASE_URL=postgresql://USER:PASSWORD@HOST/neondb?sslmode=require
