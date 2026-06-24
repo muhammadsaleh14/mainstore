@@ -1,13 +1,46 @@
 import { getAuth } from '@hono/clerk-auth'
 import { createMiddleware } from 'hono/factory'
+import { createDb } from '../db'
+import type { User } from '../db/schema/user'
+import { getUserByClerkId } from '../modules/user/user.service'
 import type { Bindings } from '../types/env'
 
-export const requireAuth = createMiddleware<{ Bindings: Bindings }>(async (c, next) => {
-  const auth = getAuth(c)
+export type AuthVariables = {
+  user: User
+}
 
-  if (!auth?.userId) {
-    return c.json({ error: 'Unauthorized' }, 401)
-  }
+export const requireAuth = createMiddleware<{ Bindings: Bindings; Variables: AuthVariables }>(
+  async (c, next) => {
+    const auth = getAuth(c)
 
-  await next()
-})
+    if (!auth?.userId) {
+      return c.json({ error: 'Unauthorized' }, 401)
+    }
+
+    await next()
+  },
+)
+
+export function requireRole(...allowedRoles: User['role'][]) {
+  return createMiddleware<{ Bindings: Bindings; Variables: AuthVariables }>(async (c, next) => {
+    const auth = getAuth(c)
+
+    if (!auth?.userId) {
+      return c.json({ error: 'Unauthorized' }, 401)
+    }
+
+    const db = createDb(c.env.DATABASE_URL)
+    const user = await getUserByClerkId(db, auth.userId)
+
+    if (!user) {
+      return c.json({ error: 'User not found' }, 404)
+    }
+
+    if (!allowedRoles.includes(user.role)) {
+      return c.json({ error: 'Forbidden' }, 403)
+    }
+
+    c.set('user', user)
+    await next()
+  })
+}

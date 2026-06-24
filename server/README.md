@@ -142,6 +142,8 @@ npm run dev
 | `GET /` | No | API health check |
 | `GET /products` | No | Public product list |
 | `GET /me` | Yes | Current user + sync to Neon |
+| `GET /admin/users` | Admin | List all users + roles |
+| `PATCH /admin/users/:id/role` | Admin | Change a user's role |
 
 To call `/me`, send a Clerk session token in the `Authorization` header:
 
@@ -158,6 +160,44 @@ After deploy, set secrets on Cloudflare:
 ```txt
 npx wrangler secret put CLERK_SECRET_KEY
 npx wrangler secret put CLERK_PUBLISHABLE_KEY
+```
+
+---
+
+## Step 4: Roles (RBAC)
+
+Roles live in Neon on `users.role`: `admin`, `manager`, or `customer`. New users default to `customer` on first login sync (`GET /me`). Clerk only handles identity; authorization is decided here.
+
+### Protecting routes
+
+```ts
+import { requireAuth, requireRole } from '../middleware/auth'
+
+route.use('*', requireAuth)
+route.use('*', requireRole('admin'))        // admin only
+// or allow several roles:
+route.use('*', requireRole('admin', 'manager'))
+```
+
+`requireRole` loads the user from Neon, checks the role, and attaches `c.get('user')` for the route.
+
+### Bootstrap your first admin
+
+After signing in once (so your user row exists), promote yourself:
+
+1. Run `npm run db:studio`
+2. Open the `users` table, find your row, set `role` to `admin`, save.
+
+Or run SQL in the Neon console:
+
+```sql
+UPDATE users SET role = 'admin' WHERE email = 'you@example.com';
+```
+
+Then `GET /admin/users` and `PATCH /admin/users/:id/role` become available with your token. Example role change body:
+
+```json
+{ "role": "manager" }
 ```
 
 ---

@@ -11,6 +11,11 @@ Each rule below should be within one line.
 - Schemas live in `src/db/schema/`; repositories import table definitions from there.
 - One module per domain (e.g. `product`, `user`); add new features as new modules, not inside routes.
 - When generating a migration, always pass `--name` with a short descriptive slug (e.g. `add_product_variants`); never use auto-generated names.
+- Roles live in Neon `users.role` (`admin` | `manager` | `customer`); Clerk handles identity only, not authorization.
+- Protect routes with `requireAuth` then `requireRole(...)`; never check roles inside repositories or routes by hand.
+- Role assignment and lookups go through `user.service`; role validation helpers live in `user.util`.
+- Login sync must never overwrite an existing role (only set the `customer` default on first insert).
+- Do not run commands from agent
 
 ## Migrations
 

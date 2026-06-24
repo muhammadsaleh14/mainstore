@@ -29,6 +29,13 @@
       "when": 1782332633924,
       "tag": "0003_remove_compare_at_price_from_variants",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1782335035688,
+      "tag": "0004_melted_serpent_society",
+      "breakpoints": true
     }
   ]
 }

@@ -1,6 +1,7 @@
 import { clerkMiddleware } from '@hono/clerk-auth'
 import { Hono } from 'hono'
 import { cors } from 'hono/cors'
+import adminRoute from './routes/admin'
 import meRoute from './routes/me'
 import productsRoute from './routes/products'
 import type { Bindings } from './types/env'
@@ -25,5 +26,6 @@ app.get('/', (c) => {
 
 app.route('/products', productsRoute)
 app.route('/me', meRoute)
+app.route('/admin', adminRoute)
 
 export default app
