@@ -12,3 +12,5 @@ export const createCategorySchema = z
     slug: data.slug && data.slug.length > 0 ? slugify(data.slug) : slugify(data.name),
     parentId: data.parentId,
   }))
+
+export type CategoryInput = z.infer<typeof createCategorySchema>

@@ -1,6 +1,6 @@
 import type { Db } from '../../db'
 import { findAllCategories, insertCategory } from './category.repository'
-import type { CategoryInput } from './category.input'
+import type { CategoryInput } from './category.schema'
 
 export async function listCategories(db: Db) {
   return findAllCategories(db)

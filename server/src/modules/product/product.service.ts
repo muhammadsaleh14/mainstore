@@ -14,7 +14,7 @@ import type {
   CreateProductInput,
   UpdateProductInput,
   VariantInput,
-} from './product.input'
+} from './product.schema'
 import { toProductResponse, type ProductResponse } from './product.response'
 
 export type ServiceResult<T> =

@@ -18,7 +18,7 @@ import {
   createVariantSchema,
   updateProductSchema,
   updateVariantSchema,
-} from './product.validation'
+} from '../../modules/product/product.schema'
 
 const productRoutes = new Hono<{ Bindings: Bindings; Variables: AuthVariables }>()
 

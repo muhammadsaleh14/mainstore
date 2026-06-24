@@ -5,7 +5,7 @@ import type { AuthVariables } from '../../middleware/auth'
 import { createCategory, listCategories } from '../../modules/category/category.service'
 import type { Bindings } from '../../types/env'
 import { parseJson } from '../validation'
-import { createCategorySchema } from './category.validation'
+import { createCategorySchema } from '../../modules/category/category.schema'
 
 const categoryRoutes = new Hono<{ Bindings: Bindings; Variables: AuthVariables }>()
 

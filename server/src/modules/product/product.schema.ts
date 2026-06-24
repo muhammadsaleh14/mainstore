@@ -56,3 +56,8 @@ export const updateVariantSchema = z
   })
   .partial()
   .refine((data) => Object.keys(data).length > 0, { message: 'No valid fields to update' })
+
+export type VariantInput = z.infer<typeof createVariantSchema>
+export type CreateProductInput = z.infer<typeof createProductSchema>
+export type UpdateProductInput = z.infer<typeof updateProductSchema>
+export type UpdateVariantInput = z.infer<typeof updateVariantSchema>
