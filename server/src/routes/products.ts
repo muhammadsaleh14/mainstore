@@ -1,14 +1,14 @@
 import { Hono } from 'hono'
 import { createDb } from '../db'
-import { products } from '../db/schema/product'
+import { listProducts } from '../modules/product/product.service'
 import type { Bindings } from '../types/env'
 
 const productsRoute = new Hono<{ Bindings: Bindings }>()
 
 productsRoute.get('/', async (c) => {
   const db = createDb(c.env.DATABASE_URL)
-  const allProducts = await db.select().from(products)
-  return c.json(allProducts)
+  const products = await listProducts(db)
+  return c.json(products)
 })
 
 export default productsRoute
