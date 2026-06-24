@@ -1,32 +1,74 @@
-# React + TypeScript + Vite
+# MainStore Admin
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+Admin dashboard for the MainStore API. Built with Vite + React + TypeScript.
 
-Currently, two official plugins are available:
+## Stack
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+| Concern | Tool |
+|---------|------|
+| UI components | Ant Design v6 (`antd`) |
+| Server state | TanStack Query (`@tanstack/react-query`) |
+| Client/UI state | Zustand (sidebar, theme) |
+| Routing | React Router |
+| HTTP | Axios (with Clerk token injection) |
+| Auth | Clerk (`@clerk/clerk-react`), gated to the `admin` role |
 
-## React Compiler
+State is **hybrid**: server data lives in React Query; local UI state (sidebar, theme) lives in Zustand.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Project structure
 
-## Expanding the Oxlint configuration
-
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
-
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+```
+src/
+  config/        # env access
+  lib/           # axios client, query client
+  stores/        # zustand stores (UI state)
+  types/         # shared API types
+  components/    # shared components (guards, layout helpers)
+  layouts/       # DashboardLayout (sider + header)
+  routes/        # router definition
+  features/      # feature modules (hybrid: each owns api/hooks/pages)
+    auth/
+    dashboard/
+    products/
+    users/
 ```
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+Each feature folder owns its `api/` (HTTP calls), `hooks/` (React Query), and `pages/` (screens). Shared concerns live in the top-level layers.
+
+## Setup
+
+1. Install dependencies:
+
+   ```txt
+   npm install
+   ```
+
+2. Copy the env template and fill in values:
+
+   ```txt
+   copy .env.example .env
+   ```
+
+   - `VITE_API_URL` — your Hono Worker URL (default `http://localhost:8787`)
+   - `VITE_CLERK_PUBLISHABLE_KEY` — from the Clerk dashboard (API Keys)
+
+3. Start the dev server:
+
+   ```txt
+   npm run dev
+   ```
+
+   Open http://localhost:5173
+
+## Access
+
+The dashboard requires a Clerk account whose Neon `users.role` is `admin`. See the server README ("Step 4: Roles") for how to promote your first admin. Non-admins see an "Access denied" screen.
+
+## Scripts
+
+| Command | Purpose |
+|---------|---------|
+| `npm run dev` | Start dev server |
+| `npm run build` | Type-check and build for production |
+| `npm run preview` | Preview the production build |
+| `npm run lint` | Lint with oxlint |
