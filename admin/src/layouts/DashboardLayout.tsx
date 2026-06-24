@@ -3,6 +3,7 @@ import {
   AppstoreOutlined,
   BulbOutlined,
   DashboardOutlined,
+  FolderOutlined,
   MenuFoldOutlined,
   MenuUnfoldOutlined,
   TeamOutlined,
@@ -17,6 +18,7 @@ const { Header, Sider, Content } = Layout
 const menuItems = [
   { key: '/', icon: <DashboardOutlined />, label: 'Dashboard' },
   { key: '/products', icon: <AppstoreOutlined />, label: 'Products' },
+  { key: '/categories', icon: <FolderOutlined />, label: 'Categories' },
   { key: '/users', icon: <TeamOutlined />, label: 'Users' },
 ]
 
