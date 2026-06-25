@@ -4,6 +4,7 @@ import {
   BulbOutlined,
   DashboardOutlined,
   FolderOutlined,
+  ShoppingCartOutlined,
   MenuFoldOutlined,
   MenuUnfoldOutlined,
   TeamOutlined,
@@ -19,6 +20,7 @@ const menuItems = [
   { key: '/', icon: <DashboardOutlined />, label: 'Dashboard' },
   { key: '/products', icon: <AppstoreOutlined />, label: 'Products' },
   { key: '/categories', icon: <FolderOutlined />, label: 'Categories' },
+  { key: '/orders', icon: <ShoppingCartOutlined />, label: 'Orders' },
   { key: '/users', icon: <TeamOutlined />, label: 'Users' },
 ]
 
