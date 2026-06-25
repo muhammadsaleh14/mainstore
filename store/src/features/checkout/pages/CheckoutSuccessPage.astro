@@ -1,0 +1,44 @@
+---
+import Layout from '@/layouts/Layout.astro'
+import { fetchOrder } from '@/features/orders/api/orders.api'
+
+const orderId = Number(Astro.url.searchParams.get('orderId'))
+let order = null
+let error: string | null = null
+
+if (!orderId || Number.isNaN(orderId)) {
+  error = 'Missing order information'
+} else {
+  const { getToken } = Astro.locals.auth()
+  const token = await getToken()
+  if (!token) {
+    return Astro.redirect('/sign-in')
+  }
+  try {
+    order = await fetchOrder(token, orderId)
+  } catch {
+    error = 'Could not load order'
+  }
+}
+---
+
+<Layout title="Order confirmed — MainStore" activeNav="orders">
+  {error ? (
+    <div class="alert alert-error">{error}</div>
+  ) : order?.status === 'cancelled' ? (
+    <div class="card stack">
+      <h1 class="page-title">Order cancelled</h1>
+      <p class="muted">Order #{order.id} was not completed.</p>
+      <a href="/cart" class="btn btn-primary">Return to cart</a>
+    </div>
+  ) : order ? (
+    <div class="card stack">
+      <h1 class="page-title">Thank you for your order!</h1>
+      <p>Order #{order.id} is confirmed. Total: <strong>${order.total}</strong></p>
+      <div class="actions">
+        <a href="/orders" class="btn btn-primary">View my orders</a>
+        <a href="/" class="btn">Continue shopping</a>
+      </div>
+    </div>
+  ) : null}
+</Layout>

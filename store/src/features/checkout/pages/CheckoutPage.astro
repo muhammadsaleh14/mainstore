@@ -1,0 +1,15 @@
+---
+import Layout from '@/layouts/Layout.astro'
+---
+
+<Layout title="Checkout — MainStore" activeNav="cart">
+  <h1 class="page-title">Checkout</h1>
+  <div id="checkout-root" class="card">
+    <p class="muted">Loading…</p>
+  </div>
+</Layout>
+
+<script>
+  import { initCheckoutPage } from '@/features/checkout/scripts/checkout-page'
+  initCheckoutPage()
+</script>

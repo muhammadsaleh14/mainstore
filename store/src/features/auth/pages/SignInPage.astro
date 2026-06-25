@@ -1,0 +1,10 @@
+---
+import { SignIn } from '@clerk/astro/components'
+import Layout from '@/layouts/Layout.astro'
+---
+
+<Layout title="Sign in — MainStore">
+  <div class="sign-in-wrap">
+    <SignIn routing="path" path="/sign-in" signUpUrl="/sign-in" forceRedirectUrl="/" />
+  </div>
+</Layout>

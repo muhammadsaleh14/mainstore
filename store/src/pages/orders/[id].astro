@@ -1,0 +1,10 @@
+---
+import OrderDetailPage from '@/features/orders/pages/OrderDetailPage.astro'
+
+const { id } = Astro.params
+if (!id) {
+  return Astro.redirect('/orders')
+}
+---
+
+<OrderDetailPage orderId={id} />

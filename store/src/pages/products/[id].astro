@@ -1,0 +1,10 @@
+---
+import ProductDetailPage from '@/features/catalog/pages/ProductDetailPage.astro'
+
+const { id } = Astro.params
+if (!id) {
+  return Astro.redirect('/')
+}
+---
+
+<ProductDetailPage productId={id} />

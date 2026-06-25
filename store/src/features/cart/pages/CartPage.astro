@@ -1,0 +1,15 @@
+---
+import Layout from '@/layouts/Layout.astro'
+---
+
+<Layout title="Cart — MainStore" activeNav="cart">
+  <h1 class="page-title">Cart</h1>
+  <div id="cart-root" class="card">
+    <p class="muted">Loading cart…</p>
+  </div>
+</Layout>
+
+<script>
+  import { initCartPage } from '@/features/cart/scripts/cart-page'
+  initCartPage()
+</script>

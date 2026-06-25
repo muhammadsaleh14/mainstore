@@ -1,0 +1,16 @@
+---
+import type { Product } from '@/types/api'
+import { formatPriceRange } from '../lib/catalog.util'
+
+interface Props {
+  product: Product
+}
+
+const { product } = Astro.props
+---
+
+<a href={`/products/${product.id}`} class="card product-card">
+  <h2>{product.name}</h2>
+  {product.description && <p class="muted">{product.description}</p>}
+  <p class="price">{formatPriceRange(product.variants)}</p>
+</a>

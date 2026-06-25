@@ -1,0 +1,32 @@
+---
+import Layout from '@/layouts/Layout.astro'
+import { fetchCatalog } from '../api/catalog.api'
+import ProductCard from '../components/ProductCard.astro'
+
+let products = []
+let error: string | null = null
+
+try {
+  products = await fetchCatalog()
+} catch (e) {
+  error = e instanceof Error ? e.message : 'Could not load products'
+}
+---
+
+<Layout title="Shop — MainStore">
+  <h1 class="page-title">Shop</h1>
+
+  {error ? (
+    <div class="alert alert-error">Could not load products. Make sure the API is running.</div>
+  ) : products.length === 0 ? (
+    <div class="empty card">
+      <p class="muted">No products available yet.</p>
+    </div>
+  ) : (
+    <div class="grid">
+      {products.map((product) => (
+        <ProductCard product={product} />
+      ))}
+    </div>
+  )}
+</Layout>

@@ -1,0 +1,100 @@
+---
+import Layout from '@/layouts/Layout.astro'
+import { formatDateTime } from '@/lib/format'
+import { fetchOrder } from '../api/orders.api'
+import { formatShippingAddress } from '../lib/orders.util'
+import { formatOrderStatus, orderStatusClass } from '../orderStatus'
+
+interface Props {
+  orderId: string
+}
+
+const { orderId } = Astro.props
+const id = Number(orderId)
+const { getToken } = Astro.locals.auth()
+const token = await getToken()
+if (!token) {
+  return Astro.redirect('/sign-in')
+}
+
+let order = null
+let error: string | null = null
+
+if (!id || Number.isNaN(id)) {
+  error = 'Invalid order'
+} else {
+  try {
+    order = await fetchOrder(token, id)
+  } catch {
+    error = 'Order not found'
+  }
+}
+---
+
+<Layout title={order ? `Order #${order.id} — MainStore` : 'Order — MainStore'} activeNav="orders">
+  <a href="/orders" class="btn" style="margin-bottom: 1rem;">← Back to orders</a>
+
+  {error || !order ? (
+    <div class="alert alert-error">{error ?? 'Order not found'}</div>
+  ) : (
+    <>
+      <div class="card stack">
+        <h1 class="page-title" style="margin-bottom: 0;">Order #{order.id}</h1>
+        <div class="field-grid">
+          <p>
+            <span class="muted">Status</span><br />
+            <span class={orderStatusClass(order.status)}>{formatOrderStatus(order.status)}</span>
+          </p>
+          <p>
+            <span class="muted">Payment</span><br />
+            <span class="tag">{order.paymentStatus}</span>
+          </p>
+          <p>
+            <span class="muted">Placed</span><br />
+            {formatDateTime(order.createdAt)}
+          </p>
+          <p>
+            <span class="muted">Total</span><br />
+            <strong>${order.total}</strong>
+          </p>
+        </div>
+        <p class="muted">Subtotal ${order.subtotal} · Shipping ${order.shippingTotal}</p>
+      </div>
+
+      <div class="card stack">
+        <h2 style="margin: 0;">Shipping address</h2>
+        <p>
+          {order.shippingAddress.fullName}<br />
+          {formatShippingAddress(order.shippingAddress)}
+        </p>
+        {order.shippingAddress.phone && <p class="muted">Phone: {order.shippingAddress.phone}</p>}
+      </div>
+
+      <div class="card">
+        <h2>Items</h2>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Product</th>
+              <th>SKU</th>
+              <th>Unit price</th>
+              <th>Qty</th>
+              <th>Line total</th>
+            </tr>
+          </thead>
+          <tbody>
+            {order.items.map((item) => (
+              <tr>
+                <td>{item.productName}</td>
+                <td>{item.variantSku}</td>
+                <td>${item.unitPrice}</td>
+                <td>{item.quantity}</td>
+                <td>${item.lineTotal}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </>
+  )}
+</Layout>

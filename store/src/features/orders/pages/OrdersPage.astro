@@ -1,0 +1,67 @@
+---
+import Layout from '@/layouts/Layout.astro'
+import { formatDate } from '@/lib/format'
+import { fetchOrders } from '../api/orders.api'
+import { formatOrderStatus, orderStatusClass } from '../orderStatus'
+
+const { getToken } = Astro.locals.auth()
+const token = await getToken()
+if (!token) {
+  return Astro.redirect('/sign-in')
+}
+
+let orders = []
+let error: string | null = null
+
+try {
+  orders = await fetchOrders(token)
+} catch {
+  error = 'Could not load orders'
+}
+---
+
+<Layout title="My orders — MainStore" activeNav="orders">
+  <h1 class="page-title">My orders</h1>
+
+  {error ? (
+    <div class="alert alert-error">{error}</div>
+  ) : orders.length === 0 ? (
+    <div class="empty card">
+      <p class="muted">No orders yet.</p>
+      <a href="/" class="btn btn-primary">Start shopping</a>
+    </div>
+  ) : (
+    <div class="card">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Order</th>
+            <th>Status</th>
+            <th>Payment</th>
+            <th>Total</th>
+            <th>Date</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          {orders.map((order) => (
+            <tr>
+              <td>#{order.id}</td>
+              <td>
+                <span class={orderStatusClass(order.status)}>{formatOrderStatus(order.status)}</span>
+              </td>
+              <td>
+                <span class="tag">{order.paymentStatus}</span>
+              </td>
+              <td>${order.total}</td>
+              <td>{formatDate(order.createdAt)}</td>
+              <td>
+                <a href={`/orders/${order.id}`} class="btn">View</a>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  )}
+</Layout>

@@ -1,0 +1,85 @@
+---
+import Layout from '@/layouts/Layout.astro'
+import { fetchProduct } from '../api/catalog.api'
+import { getDefaultVariant } from '../lib/catalog.util'
+
+interface Props {
+  productId: string
+}
+
+const { productId } = Astro.props
+const id = Number(productId)
+let product = null
+let error: string | null = null
+
+if (!id || Number.isNaN(id)) {
+  error = 'Invalid product'
+} else {
+  try {
+    product = await fetchProduct(id)
+  } catch {
+    error = 'Product not found'
+  }
+}
+
+const defaultVariant = product ? getDefaultVariant(product.variants) : null
+---
+
+<Layout title={product ? `${product.name} — MainStore` : 'Product — MainStore'}>
+  {error || !product ? (
+    <div class="alert alert-error">This item may no longer be available.</div>
+  ) : (
+    <article class="card stack" style="max-width: 520px;">
+      <h1 class="page-title" style="margin-bottom: 0;">{product.name}</h1>
+      {product.description && <p class="muted">{product.description}</p>}
+
+      <form id="add-to-cart-form" class="stack">
+        <label class="field">
+          <span>Variant</span>
+          <select name="variantId" required>
+            {product.variants.map((variant) => (
+              <option
+                value={variant.id}
+                selected={variant.id === defaultVariant?.id}
+                disabled={variant.stockQuantity <= 0}
+              >
+                {variant.sku} — ${variant.price}
+                {variant.stockQuantity <= 0 ? ' (out of stock)' : ''}
+              </option>
+            ))}
+          </select>
+        </label>
+
+        <label class="field">
+          <span>Quantity</span>
+          <input
+            type="number"
+            name="quantity"
+            min="1"
+            value="1"
+            data-stock={defaultVariant?.stockQuantity ?? 1}
+          />
+          <span class="muted" id="stock-label">
+            {defaultVariant ? `${defaultVariant.stockQuantity} in stock` : ''}
+          </span>
+        </label>
+
+        <p class="alert alert-info" id="cart-message" hidden></p>
+
+        <div class="actions">
+          <button type="submit" class="btn btn-primary">Add to cart</button>
+          <a href="/" class="btn">Back to shop</a>
+        </div>
+
+        <p class="muted">You can shop without signing in. Sign in at checkout to place an order.</p>
+      </form>
+    </article>
+  )}
+
+  {product && (
+    <script define:vars={{ product }}>
+      import { initAddToCartForm } from '@/features/catalog/scripts/add-to-cart'
+      initAddToCartForm(product)
+    </script>
+  )}
+</Layout>

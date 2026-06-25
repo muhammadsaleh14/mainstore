@@ -1,0 +1,49 @@
+---
+import '@/styles/global.css'
+import { UserMenu } from '@/features/auth/components/UserMenu'
+
+interface Props {
+  title?: string
+  activeNav?: 'shop' | 'cart' | 'orders'
+}
+
+const { title = 'MainStore', activeNav } = Astro.props
+const pathname = Astro.url.pathname
+const navActive =
+  activeNav ??
+  (pathname.startsWith('/orders')
+    ? 'orders'
+    : pathname.startsWith('/cart') || pathname.startsWith('/checkout')
+      ? 'cart'
+      : 'shop')
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title}</title>
+  </head>
+  <body>
+    <header class="site-header">
+      <a href="/" class="site-brand">MainStore</a>
+      <nav class="site-nav">
+        <a href="/" class:list={{ active: navActive === 'shop' }}>Shop</a>
+        <a href="/cart" class:list={['cart-link', { active: navActive === 'cart' }]}>
+          Cart
+          <span class="cart-badge" id="cart-badge" aria-label="Cart items"></span>
+        </a>
+        <a href="/orders" class:list={{ active: navActive === 'orders' }}>My orders</a>
+      </nav>
+      <UserMenu client:load />
+    </header>
+    <main class="site-main">
+      <slot />
+    </main>
+    <script>
+      import { initCartBadge } from '@/features/cart/scripts/cart-badge'
+      initCartBadge()
+    </script>
+  </body>
+</html>
