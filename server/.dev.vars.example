@@ -1,9 +1,12 @@
-# Copy this file to .dev.vars and fill in your values.
-# .dev.vars is gitignored — never commit real secrets.
-
-# Neon — https://console.neon.tech → project → Connect (enable Connection pooling)
-DATABASE_URL=postgresql://USER:PASSWORD@HOST/neondb?sslmode=require
-
-# Clerk — https://dashboard.clerk.com → your app → API Keys
-CLERK_SECRET_KEY=sk_test_...
-CLERK_PUBLISHABLE_KEY=pk_test_...
+# Copy this file to .dev.vars and fill in your values.
+# .dev.vars is gitignored — never commit real secrets.
+
+# Neon — https://console.neon.tech → project → Connect (enable Connection pooling)
+DATABASE_URL=postgresql://USER:PASSWORD@HOST/neondb?sslmode=require
+
+# Clerk — https://dashboard.clerk.com → your app → API Keys
+CLERK_SECRET_KEY=sk_test_...
+CLERK_PUBLISHABLE_KEY=pk_test_...
+
+# Flat shipping fee in cents (optional, defaults to 0 = free shipping)
+SHIPPING_FLAT_CENTS=0

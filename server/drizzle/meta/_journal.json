@@ -43,6 +43,27 @@
       "when": 1782341685971,
       "tag": "0005_change_product_status_to_enabled_disabled",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1782343891040,
+      "tag": "0006_add_cart_and_orders",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1782372663469,
+      "tag": "0007_drop_cart_tables",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1782377681829,
+      "tag": "0008_remove_stripe_from_orders",
+      "breakpoints": true
     }
   ]
 }

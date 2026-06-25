@@ -21,6 +21,15 @@ export async function findByClerkId(db: Db, clerkId: string) {
   return user ?? null
 }
 
+export async function findUserEmailById(db: Db, userId: number) {
+  const [row] = await db
+    .select({ email: users.email })
+    .from(users)
+    .where(eq(users.id, userId))
+    .limit(1)
+  return row?.email ?? null
+}
+
 export async function findAllUsers(db: Db) {
   return db.select().from(users)
 }

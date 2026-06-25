@@ -1,4 +1,3 @@
-import type { User as ClerkUser } from '@clerk/backend'
 import type { Db } from '../../db'
 import type { User } from '../../db/schema/user'
 import {
@@ -7,9 +6,9 @@ import {
   updateUserRole,
   upsertByClerkId,
 } from './user.repository'
-import { getPrimaryEmail } from './user.util'
+import { getPrimaryEmail, type ClerkUserLike } from './user.util'
 
-export async function syncCurrentUser(db: Db, clerkId: string, clerkUser: ClerkUser) {
+export async function syncCurrentUser(db: Db, clerkId: string, clerkUser: ClerkUserLike) {
   const email = getPrimaryEmail(clerkUser)
   const user = await upsertByClerkId(db, clerkId, email)
 

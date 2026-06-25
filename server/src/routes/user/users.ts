@@ -5,7 +5,7 @@ import type { AuthVariables } from '../../middleware/auth'
 import { assignRole, listUsers } from '../../modules/user/user.service'
 import type { Bindings } from '../../types/env'
 import { parseId, parseJson } from '../validation'
-import { updateUserRoleSchema } from '../../modules/user/user.schema'
+import { updateUserRoleSchema } from '../../modules/user/user.dto'
 
 const userRoutes = new Hono<{ Bindings: Bindings; Variables: AuthVariables }>()
 

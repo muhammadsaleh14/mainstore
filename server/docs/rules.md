@@ -8,7 +8,8 @@ Each rule below should be within one line.
 - Services call repositories and utils; they must not import Drizzle query builders directly.
 - Repositories live in `src/modules/<name>/<name>.repository.ts` and are the only layer that runs Drizzle queries.
 - Utils live in `src/modules/<name>/<name>.util.ts` for pure helpers, transforms, and complex business logic.
-- Schemas live in `src/db/schema/`; repositories import table definitions from there.
+- Schemas live in `src/db/schema/` (Drizzle table definitions); repositories import table definitions from there.
+- API request validation (Zod) lives in `src/modules/<name>/<name>.dto.ts`; routes import DTOs from there.
 - One module per domain (e.g. `product`, `user`); add new features as new modules, not inside routes.
 - When generating a migration, always pass `--name` with a short descriptive slug (e.g. `add_product_variants`); never use auto-generated names.
 - Roles live in Neon `users.role` (`admin` | `manager` | `customer`); Clerk handles identity only, not authorization.
@@ -41,5 +42,8 @@ Route → Service → Repository → Database (Neon via Drizzle)
 src/modules/product/
   product.repository.ts   # findAllProducts(), createProduct(), ...
   product.service.ts        # listProducts(), createProduct(), ...
+  product.dto.ts            # Zod schemas for API request bodies
   product.util.ts           # toProductResponse(), validateProduct(), ...
 ```
+
+Order module follows the same layout (`order.dto.ts`, `order.util.ts`, `order.response.ts`, etc.).

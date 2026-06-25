@@ -18,19 +18,19 @@ import {
   createVariantSchema,
   updateProductSchema,
   updateVariantSchema,
-} from '../../modules/product/product.schema'
+} from '../../modules/product/product.dto'
 
 const productRoutes = new Hono<{ Bindings: Bindings; Variables: AuthVariables }>()
 
 const adminOnly = [requireAuth, requireRole('admin')] as const
 
-productRoutes.get('/', async (c) => {
+productRoutes.get('/', ...adminOnly, async (c) => {
   const db = createDb(c.env.DATABASE_URL)
   const products = await listProducts(db)
   return c.json(products)
 })
 
-productRoutes.get('/:id', async (c) => {
+productRoutes.get('/:id', ...adminOnly, async (c) => {
   const id = parseId(c.req.param('id'))
   if (id === null) {
     return c.json({ error: 'Invalid product id' }, 400)

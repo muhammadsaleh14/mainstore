@@ -2,7 +2,7 @@ import { getAuth } from '@hono/clerk-auth'
 import { createMiddleware } from 'hono/factory'
 import { createDb } from '../db'
 import type { User } from '../db/schema/user'
-import { getUserByClerkId } from '../modules/user/user.service'
+import { getUserByClerkId, syncCurrentUser } from '../modules/user/user.service'
 import type { Bindings } from '../types/env'
 
 export type AuthVariables = {
@@ -17,6 +17,29 @@ export const requireAuth = createMiddleware<{ Bindings: Bindings; Variables: Aut
       return c.json({ error: 'Unauthorized' }, 401)
     }
 
+    await next()
+  },
+)
+
+export const requireUser = createMiddleware<{ Bindings: Bindings; Variables: AuthVariables }>(
+  async (c, next) => {
+    const auth = getAuth(c)
+
+    if (!auth?.userId) {
+      return c.json({ error: 'Unauthorized' }, 401)
+    }
+
+    const db = createDb(c.env.DATABASE_URL)
+    let user = await getUserByClerkId(db, auth.userId)
+
+    if (!user) {
+      const clerkClient = c.get('clerk')
+      const clerkUser = await clerkClient.users.getUser(auth.userId)
+      const result = await syncCurrentUser(db, auth.userId, clerkUser)
+      user = result.user
+    }
+
+    c.set('user', user)
     await next()
   },
 )

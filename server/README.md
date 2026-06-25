@@ -140,10 +140,11 @@ npm run dev
 | Route | Auth required? | Purpose |
 |-------|----------------|---------|
 | `GET /` | No | API health check |
-| `GET /products` | No | Public product list |
+| `GET /catalog` | No | Public catalog (enabled products only) |
+| `GET /products` | Admin | Full product list (all statuses) |
 | `GET /me` | Yes | Current user + sync to Neon |
-| `GET /admin/users` | Admin | List all users + roles |
-| `PATCH /admin/users/:id/role` | Admin | Change a user's role |
+| `GET /users` | Admin | List all users + roles |
+| `PATCH /users/:id/role` | Admin | Change a user's role |
 
 To call `/me`, send a Clerk session token in the `Authorization` header:
 
@@ -194,11 +195,62 @@ Or run SQL in the Neon console:
 UPDATE users SET role = 'admin' WHERE email = 'you@example.com';
 ```
 
-Then `GET /admin/users` and `PATCH /admin/users/:id/role` become available with your token. Example role change body:
+Then `GET /users` and `PATCH /users/:id/role` become available with your token. Example role change body:
 
 ```json
 { "role": "manager" }
 ```
+
+---
+
+## Step 5: Orders & checkout
+
+Customers keep items in the browser (local storage). At checkout the storefront sends line items; the API validates stock, prices, and product availability, creates a paid order, and decrements stock immediately. Online payment is not integrated yet.
+
+### A. Create the order tables
+
+```txt
+npm run db:generate -- --name add_cart_and_orders
+npm run db:migrate
+```
+
+If you later removed server-side carts:
+
+```txt
+npm run db:generate -- --name drop_cart_tables
+npm run db:migrate
+```
+
+If you removed Stripe columns from the schema:
+
+```txt
+npm run db:generate -- --name remove_stripe_from_orders
+npm run db:migrate
+```
+
+### B. Optional env
+
+```txt
+SHIPPING_FLAT_CENTS=0
+```
+
+`SHIPPING_FLAT_CENTS` is a flat shipping fee in cents (`0` = free shipping).
+
+### C. Endpoints
+
+| Route | Auth | Purpose |
+|-------|------|---------|
+| `POST /checkout` | Customer | Place order (`{ shippingAddress, items: [{ variantId, quantity }] }`) |
+| `GET /orders` | Customer/Staff | Own orders (all orders for admin/manager) |
+| `GET /orders/:id` | Customer/Staff | Order detail (scoped to caller) |
+| `PATCH /orders/:id/status` | Admin/Manager | Update status (`shipped`, `delivered`, `cancelled`) |
+
+### D. Test the flow
+
+1. Sign in on the storefront, add an enabled product to the cart.
+2. Check out with a shipping address and click **Place order**.
+3. Stock drops immediately and the cart clears.
+4. The order appears in the admin Orders page, where staff can mark it `shipped` then `delivered`.
 
 ---
 

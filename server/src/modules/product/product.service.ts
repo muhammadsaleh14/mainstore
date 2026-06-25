@@ -2,6 +2,7 @@ import type { Db } from '../../db'
 import {
   findAllProductVariants,
   findAllProducts,
+  findEnabledProducts,
   findProductById,
   findVariantById,
   findVariantsByProductId,
@@ -14,7 +15,7 @@ import type {
   CreateProductInput,
   UpdateProductInput,
   VariantInput,
-} from './product.schema'
+} from './product.dto'
 import { toProductResponse, type ProductResponse } from './product.response'
 
 export type ServiceResult<T> =
@@ -31,6 +32,20 @@ function isUniqueViolation(error: unknown): boolean {
 export async function listProducts(db: Db) {
   const [rows, variants] = await Promise.all([findAllProducts(db), findAllProductVariants(db)])
   return rows.map((product) => toProductResponse(product, variants))
+}
+
+export async function listCatalogProducts(db: Db) {
+  const [rows, variants] = await Promise.all([findEnabledProducts(db), findAllProductVariants(db)])
+  return rows.map((product) => toProductResponse(product, variants))
+}
+
+export async function getCatalogProduct(db: Db, id: number): Promise<ServiceResult<ProductResponse>> {
+  const product = await findProductById(db, id)
+  if (!product || product.status !== 'enabled') {
+    return { ok: false, status: 404, error: 'Product not found' }
+  }
+  const variants = await findVariantsByProductId(db, id)
+  return { ok: true, value: toProductResponse(product, variants) }
 }
 
 export async function getProduct(db: Db, id: number): Promise<ServiceResult<ProductResponse>> {

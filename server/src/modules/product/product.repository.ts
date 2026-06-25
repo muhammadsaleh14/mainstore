@@ -9,6 +9,10 @@ export async function findAllProducts(db: Db) {
   return db.select().from(products)
 }
 
+export async function findEnabledProducts(db: Db) {
+  return db.select().from(products).where(eq(products.status, 'enabled'))
+}
+
 export async function findAllProductVariants(db: Db) {
   return db.select().from(productVariants)
 }
