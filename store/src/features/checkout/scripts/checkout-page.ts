@@ -1,4 +1,4 @@
-import { getToken } from '@clerk/astro/client'
+import { getClientSessionToken } from '@/features/auth/lib/clerk-client'
 import { createCheckout } from '@/features/checkout/api/checkout.api'
 import { parseShippingAddress } from '@/features/checkout/lib/checkout.util'
 import {
@@ -99,7 +99,7 @@ export function initCheckoutPage(rootId = 'checkout-root'): void {
     submitBtn.textContent = 'Placing order…'
 
     try {
-      const token = await getToken()
+      const token = await getClientSessionToken()
       if (!token) throw new Error('Please sign in to checkout')
 
       const result = await createCheckout(token, {

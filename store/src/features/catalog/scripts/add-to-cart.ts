@@ -1,10 +1,13 @@
 import type { Product } from '@/types/api'
 import { addCartItem } from '@/features/cart/lib/cart.store'
 
-export function initAddToCartForm(product: Product): void {
-  const form = document.getElementById('add-to-cart-form')
-  const variantSelect = form?.querySelector('select[name="variantId"]')
-  const quantityInput = form?.querySelector('input[name="quantity"]') as HTMLInputElement | null
+export function initAddToCartForm(): void {
+  const form = document.getElementById('add-to-cart-form') as HTMLFormElement | null
+  if (!form?.dataset.product) return
+
+  const product = JSON.parse(form.dataset.product) as Product
+  const variantSelect = form.querySelector('select[name="variantId"]')
+  const quantityInput = form.querySelector('input[name="quantity"]') as HTMLInputElement | null
   const stockLabel = document.getElementById('stock-label')
   const message = document.getElementById('cart-message')
   const variants = product.variants
@@ -22,7 +25,7 @@ export function initAddToCartForm(product: Product): void {
     stockLabel.textContent = `${variant.stockQuantity} in stock`
   })
 
-  form?.addEventListener('submit', (event) => {
+  form.addEventListener('submit', (event) => {
     event.preventDefault()
     const variant = getSelectedVariant()
     const quantity = Number(quantityInput?.value ?? 1)

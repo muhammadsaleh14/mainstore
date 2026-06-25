@@ -33,7 +33,7 @@ const defaultVariant = product ? getDefaultVariant(product.variants) : null
       <h1 class="page-title" style="margin-bottom: 0;">{product.name}</h1>
       {product.description && <p class="muted">{product.description}</p>}
 
-      <form id="add-to-cart-form" class="stack">
+      <form id="add-to-cart-form" class="stack" data-product={JSON.stringify(product)}>
         <label class="field">
           <span>Variant</span>
           <select name="variantId" required>
@@ -77,9 +77,9 @@ const defaultVariant = product ? getDefaultVariant(product.variants) : null
   )}
 
   {product && (
-    <script define:vars={{ product }}>
+    <script>
       import { initAddToCartForm } from '@/features/catalog/scripts/add-to-cart'
-      initAddToCartForm(product)
+      initAddToCartForm()
     </script>
   )}
 </Layout>
