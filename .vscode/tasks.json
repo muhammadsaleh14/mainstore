@@ -1,0 +1,139 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "store: dev",
+      "type": "npm",
+      "script": "dev",
+      "path": "store",
+      "group": "build",
+      "problemMatcher": []
+    },
+    {
+      "label": "store: build",
+      "type": "npm",
+      "script": "build",
+      "path": "store",
+      "group": "build",
+      "problemMatcher": []
+    },
+    {
+      "label": "store: preview",
+      "type": "npm",
+      "script": "preview",
+      "path": "store",
+      "problemMatcher": []
+    },
+    {
+      "label": "server: dev",
+      "type": "npm",
+      "script": "dev",
+      "path": "server",
+      "group": "build",
+      "problemMatcher": []
+    },
+    {
+      "label": "server: deploy",
+      "type": "npm",
+      "script": "deploy",
+      "path": "server",
+      "problemMatcher": []
+    },
+    {
+      "label": "server: db:generate",
+      "type": "npm",
+      "script": "db:generate",
+      "path": "server",
+      "problemMatcher": []
+    },
+    {
+      "label": "server: db:migrate",
+      "type": "npm",
+      "script": "db:migrate",
+      "path": "server",
+      "problemMatcher": []
+    },
+    {
+      "label": "server: db:push",
+      "type": "npm",
+      "script": "db:push",
+      "path": "server",
+      "problemMatcher": []
+    },
+    {
+      "label": "server: db:studio",
+      "type": "npm",
+      "script": "db:studio",
+      "path": "server",
+      "problemMatcher": []
+    },
+    {
+      "label": "server: db:seed",
+      "type": "npm",
+      "script": "db:seed",
+      "path": "server",
+      "problemMatcher": []
+    },
+    {
+      "label": "server: db:reset",
+      "type": "npm",
+      "script": "db:reset",
+      "path": "server",
+      "problemMatcher": []
+    },
+    {
+      "label": "admin: dev",
+      "type": "npm",
+      "script": "dev",
+      "path": "admin",
+      "group": "build",
+      "problemMatcher": []
+    },
+    {
+      "label": "admin: build",
+      "type": "npm",
+      "script": "build",
+      "path": "admin",
+      "group": "build",
+      "problemMatcher": []
+    },
+    {
+      "label": "admin: lint",
+      "type": "npm",
+      "script": "lint",
+      "path": "admin",
+      "problemMatcher": []
+    },
+    {
+      "label": "admin: preview",
+      "type": "npm",
+      "script": "preview",
+      "path": "admin",
+      "problemMatcher": []
+    },
+    {
+      "label": "Run All Dev",
+      "dependsOn": [
+        "store: dev",
+        "server: dev",
+        "admin: dev"
+      ],
+      "dependsOrder": "parallel",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Build All",
+      "dependsOn": [
+        "store: build",
+        "admin: build"
+      ],
+      "dependsOrder": "parallel",
+      "group": "build",
+      "problemMatcher": []
+    }
+  ]
+}
