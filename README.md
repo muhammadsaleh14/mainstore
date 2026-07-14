@@ -22,6 +22,26 @@ A full-stack e-commerce platform with a customer storefront, admin dashboard, an
 
 ---
 
+## Screenshots
+
+### Admin dashboard
+
+![Admin dashboard overview](docs/images/admin-dashboard.png)
+
+### Products
+
+![Product catalog management](docs/images/admin-products.png)
+
+### Categories
+
+![Category hierarchy management](docs/images/admin-categories.png)
+
+### Users & roles
+
+![User and role management](docs/images/admin-users.png)
+
+---
+
 ## Prerequisites
 
 - **Node.js** 20+
@@ -38,6 +58,7 @@ MainStore/
 ├── store/          # Customer-facing storefront (Astro)
 ├── admin/          # Admin / manager dashboard (React)
 ├── server/         # API Worker (Hono + Drizzle + Neon)
+├── docs/images/    # README screenshots
 ├── .vscode/        # Shared VS Code tasks (Run All Dev, DB scripts, …)
 └── README.md
 ```
